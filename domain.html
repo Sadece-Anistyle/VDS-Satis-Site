@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alan Adı Sorgulama - NetBarınak</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    nav {
+      padding: 1rem;
+      position: relative;
+      z-index: 2;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 1; /* Always visible, no hidden/show animation */
+    }
+    .nav-logo {
+      position: absolute;
+      left: 20px;
+      height: 40px;
+    }
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    nav ul li {
+      margin: 0 1rem;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.2em;
+      transition: all 0.3s ease;
+      touch-action: manipulation;
+    }
+    nav ul li a:hover {
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transform: scale(1.1);
+    }
+    .grid-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(to bottom, #000000 0%, #0099ff 100%);
+    }
+    .grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 153, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 153, 255, 0.15) 1px, transparent 1px);
+      background-size: 100px 100px;
+      filter: drop-shadow(0 0 5px rgba(0, 153, 255, 0.3));
+    }
+    .grid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+    }
+    .domain-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: rgba(0, 102, 255, 0.1);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 2;
+    }
+    h1 {
+      text-align: center;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .search-bar input {
+      padding: 0.8rem;
+      width: 60%;
+      border-radius: 5px 0 0 5px;
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .search-bar button {
+      padding: 0.8rem 1.5rem;
+      background: linear-gradient(to left, #0066ff, #00ccff);
+      color: #fff;
+      border: none;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .search-bar button:hover {
+      background: linear-gradient(to left, #0052cc, #0099cc);
+      transform: scale(1.05);
+    }
+    .results {
+      display: grid;
+      gap: 1rem;
+    }
+    .domain-result {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 102, 255, 0.2);
+      padding: 1rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+    .domain-result:hover {
+      background: rgba(0, 102, 255, 0.4);
+      transform: translateY(-5px);
+    }
+    .domain-result span {
+      font-size: 1.1rem;
+    }
+    .domain-result button {
+      padding: 0.5rem 1rem;
+      background: linear-gradient(to left, #0066ff, #00ccff);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .domain-result button:hover {
+      background: linear-gradient(to left, #0052cc, #0099cc);
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-container">
+    <div class="grid"></div>
+  </div>
+
+  <nav id="navbar">
+    <img src="image/logo.png" alt="MineHost Logo" class="nav-logo">
+    <ul id="nav-links">
+      <li><a href="https://discord.gg/netbarinak" onclick="trackAction('Clicked Discord Link')">Discord</a></li>
+      <li><a href="/" onclick="trackAction('Clicked Home Link')">Home</a></li>
+      <li><a href="/team.html" onclick="trackAction('Clicked Team Link')">Ekip</a></li>
+      <li><a href="domain.html" onclick="trackAction('Clicked Domain Link')">Alan Adı</a></li>
+      <li><a href="profile.html" id="profile-btn">Profil</a></li>
+      <li><a href="support.html" id="support-btn">Destek</a></li>
+      <li><a href="#" onclick="logout()" id="logout-btn">Çıkış Yap</a></li>
+    </ul>
+  </nav>
+
+  <div class="domain-container">
+    <h1>Alan Adı Sorgulama</h1>
+    <div class="search-bar">
+      <input type="text" id="domain-input" placeholder="Örn: netbarinak.com">
+      <button onclick="searchDomains()">Ara</button>
+    </div>
+    <div class="results" id="domain-results"></div>
+  </div>
+
+  <script>
+    const webhookUrl = "https://canary.discord.com/api/webhooks/1354832002607747135/GrFKro7MsPX2p8AhtbUxjNWxMIjx3vD0_hMmZunAdGoRC0GsqTkaejN7UHksygau8zRN";
+    const currentUser = localStorage.getItem('currentUser');
+    const users = JSON.parse(localStorage.getItem('users')) || {};
+
+    // Mock domain pricing (in USD, will convert to TL with 20% markup)
+    const domainPrices = {
+      '.com': 10,
+      '.org': 12,
+      '.net': 11,
+      '.info': 8,
+      '.biz': 15,
+      '.co': 20,
+      '.xyz': 5,
+      '.com.tr': 15 // Added .com.tr with a price of $15 USD
+    };
+
+    // Simulated exchange rate (1 USD = 34 TL as of March 2025, adjust as needed)
+    const exchangeRate = 34;
+
+    function searchDomains() {
+      const input = document.getElementById('domain-input').value.trim().toLowerCase();
+      const resultsDiv = document.getElementById('domain-results');
+      resultsDiv.innerHTML = '';
+
+      if (!input) {
+        resultsDiv.innerHTML = '<p>Lütfen bir alan adı girin!</p>';
+        return;
+      }
+
+      const domainName = input.split('.')[0];
+      const availableTLDs = Object.keys(domainPrices);
+
+      availableTLDs.forEach(tld => {
+        const fullDomain = `${domainName}${tld}`;
+        const basePriceUSD = domainPrices[tld];
+        const basePriceTL = basePriceUSD * exchangeRate;
+        const markedUpPriceTL = Math.round(basePriceTL * 1.2); // 20% markup
+
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'domain-result';
+        resultDiv.innerHTML = `
+          <span>${fullDomain}</span>
+          <span>${markedUpPriceTL}₺ /yıl</span>
+          <button onclick="buyDomain('${fullDomain}', ${markedUpPriceTL})">Satın Al</button>
+        `;
+        resultsDiv.appendChild(resultDiv);
+      });
+
+      // Log search to Discord
+      sendDiscordNotification(`Domain Search: ${input} | User: ${currentUser || 'Misafir'}`);
+    }
+
+    function buyDomain(domain, price) {
+      if (!currentUser || !users[currentUser]) {
+        alert("Lütfen giriş yapın!");
+        window.location.href = 'index.html';
+        return;
+      }
+      if (!users[currentUser].phone) {
+        alert("Telefon numarası eklemeden satın alım yapamazsınız! Profil sayfasına yönlendiriliyorsunuz.");
+        window.location.href = 'profile.html';
+        return;
+      }
+
+      const userId = users[currentUser].id || 'Bilinmeyen ID';
+      const url = `domain_payment.html?domainName=${encodeURIComponent(domain)}&price=${price}&user=${encodeURIComponent(currentUser)}&userId=${encodeURIComponent(userId)}`;
+      window.open(url, '_blank');
+
+      // Log purchase intent to Discord
+      sendDiscordNotification(`Domain Purchase Intent: ${domain} | Price: ${price}₺ | User: ${currentUser} | User ID: ${userId}`);
+    }
+
+    function sendDiscordNotification(message) {
+      const payload = { content: message };
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).catch(error => console.error("Webhook hatası:", error));
+    }
+
+    function trackAction(action) {
+      const message = `User Action: ${action}${currentUser ? ` | User: ${currentUser}` : ''}`;
+      sendDiscordNotification(message);
+    }
+
+    function logout() {
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('loggedInIP');
+      alert("Çıkış yaptınız!");
+      window.location.href = 'index.html';
+    }
+
+    // Show/hide support and logout buttons based on login status
+    window.onload = function() {
+      const supportBtn = document.getElementById('support-btn');
+      const logoutBtn = document.getElementById('logout-btn');
+      if (currentUser && users[currentUser]) {
+        supportBtn.style.display = 'inline';
+        logoutBtn.style.display = 'inline';
+      } else {
+        supportBtn.style.display = 'none';
+        logoutBtn.style.display = 'none';
+      }
+    };
+  </script>
+</body>
+</html>

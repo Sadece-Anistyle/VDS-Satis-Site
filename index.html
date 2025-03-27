@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <title>NetBarınak - Bilişim Hizmetleri</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    nav {
+      padding: 1rem;
+      position: relative;
+      z-index: 2;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.5s ease;
+    }
+    nav.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .nav-logo {
+      position: absolute;
+      left: 20px;
+      height: 40px;
+    }
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    nav ul li {
+      margin: 0 1rem;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.2em;
+      transition: all 0.3s ease;
+      touch-action: manipulation;
+    }
+    nav ul li a:hover {
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transform: scale(1.1);
+    }
+    .hero-section {
+      text-align: center;
+      padding: 4rem 1rem;
+      background: transparent;
+      position: relative;
+      z-index: 2;
+      min-height: 50vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease 0.2s;
+    }
+    .hero-section.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .hero-section h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin: 0;
+      background: linear-gradient(90deg, #0066ff, #00ccff, #0066ff);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradient 3s linear infinite;
+    }
+    .hero-section p {
+      font-size: 1rem;
+      margin: 1rem 0;
+      opacity: 0.8;
+    }
+    .hero-section .explore-btn {
+      padding: 0.8rem 2rem;
+      background: linear-gradient(to left, #0066ff, #00ccff);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+      touch-action: manipulation;
+    }
+    .hero-section .explore-btn:hover {
+      background: linear-gradient(to left, #0052cc, #0099cc);
+      transform: scale(1.05);
+    }
+    .hero-section .stats {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .hero-section .stats div {
+      text-align: center;
+    }
+    .hero-section .stats h3 {
+      font-size: 1.5rem;
+      margin: 0;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero-section .stats p {
+      font-size: 0.9rem;
+      margin: 0.5rem 0 0;
+      opacity: 0.6;
+    }
+    .why-us-section {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 2rem 1rem;
+      position: relative;
+      z-index: 2;
+      background: transparent;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease 0.4s;
+    }
+    .why-us-section.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .why-us-section h2 {
+      text-align: center;
+      font-size: 1.8em;
+      margin-bottom: 2rem;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .why-us-section .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .why-us-section .feature {
+      background: rgba(0, 102, 255, 0.1);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 20px;
+      padding: 1.2rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    .why-us-section .feature:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 102, 255, 0.2);
+    }
+    .why-us-section .feature h3 {
+      font-size: 1.3em;
+      margin: 0 0 0.5rem;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .why-us-section .feature p {
+      font-size: 0.9rem;
+      margin: 0;
+      opacity: 0.8;
+    }
+    .welcome-vds-section {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: transparent;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease 0.6s;
+    }
+    .welcome-vds-section.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .welcome-vds-section .logo {
+      height: 80px;
+      margin-bottom: 1rem;
+    }
+    .welcome-vds-section h1 {
+      font-size: 2.2rem;
+      font-weight: bold;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(90deg, #0066ff, #00ccff, #0066ff);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradient 3s linear infinite;
+    }
+    .welcome-vds-section h1 img {
+      height: 30px;
+      margin-left: 10px;
+    }
+    .welcome-vds-section p {
+      font-size: 1.2rem;
+      margin: 1rem 0;
+      opacity: 0.8;
+    }
+    .welcome-vds-section .highlight {
+      font-size: 1rem;
+      margin: 0.5rem 0;
+      color: #00ccff;
+    }
+    .vds-packages {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease 0.8s;
+    }
+    .vds-packages.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .vds-packages h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.8em;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .package {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 102, 255, 0.1);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 20px;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      flex-wrap: wrap;
+    }
+    .package:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 102, 255, 0.2);
+    }
+    .package div {
+      flex: 1;
+      text-align: center;
+      color: #fff;
+      font-size: 0.9rem;
+      padding: 0.3rem;
+    }
+    .package button {
+      padding: 0.5rem 1rem;
+      background: rgba(0, 102, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.8em;
+      touch-action: manipulation;
+    }
+    .package button:hover {
+      background: rgba(0, 102, 255, 0.4);
+      transform: scale(1.1);
+    }
+    .grid-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(to bottom, #000000 0%, #0099ff 100%);
+    }
+    .grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 153, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 153, 255, 0.15) 1px, transparent 1px);
+      background-size: 100px 100px;
+      filter: drop-shadow(0 0 5px rgba(0, 153, 255, 0.3));
+    }
+    .grid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      position: relative;
+      z-index: 2;
+      background: transparent;
+      margin-top: 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease 1s;
+    }
+    footer.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    footer .logo {
+      height: 40px;
+      margin-bottom: 1rem;
+    }
+    footer p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    footer .made-by {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 102, 255, 0.2);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 10px;
+      padding: 1rem;
+      color: #fff;
+      z-index: 1000;
+      display: none;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.5s ease;
+      backdrop-filter: blur(5px);
+    }
+    .notification.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .notification .progress-bar {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      margin-top: 0.5rem;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .notification .progress-bar .progress {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      animation: progress 5s linear forwards;
+    }
+    .auth-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center; /* Dikey ortalama */
+      transition: opacity 0.5s ease;
+      padding: 1rem; /* Mobil cihazlarda kenar boşluğu */
+    }
+    .auth-container {
+      background: rgba(0, 102, 255, 0.1);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 20px;
+      padding: 1.5rem; /* Daha az padding ile mobil uyumluluk */
+      backdrop-filter: blur(10px);
+      color: #fff;
+      width: 100%;
+      max-width: 400px; /* Maksimum genişlik artırıldı */
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.5s ease;
+      box-sizing: border-box;
+    }
+    .auth-container.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .auth-container h2 {
+      text-align: center;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+    }
+    .auth-container input {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 5px;
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+    .auth-container button {
+      width: 100%;
+      padding: 0.8rem;
+      background: linear-gradient(to left, #0066ff, #00ccff);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.3s ease;
+      touch-action: manipulation;
+      font-size: 1rem;
+    }
+    .auth-container button:hover {
+      background: linear-gradient(to left, #0052cc, #0099cc);
+      transform: scale(1.05);
+    }
+    .google-btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 500;
+      touch-action: manipulation;
+      font-size: 1rem;
+    }
+    .google-btn:hover {
+      background: #f1f1f1;
+      transform: scale(1.05);
+    }
+    .google-logo {
+      height: 20px;
+    }
+    .auth-container .switch {
+      text-align: center;
+      margin-top: 1rem;
+      cursor: pointer;
+      color: #00ccff;
+      font-size: 0.9rem;
+    }
+    .captcha-container {
+      margin: 1rem 0;
+      text-align: center;
+    }
+    .captcha-text {
+      font-size: 1.2rem;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hidden {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .hero-section h1 {
+        font-size: 2rem;
+      }
+      .hero-section p {
+        font-size: 0.9rem;
+      }
+      .hero-section .explore-btn {
+        font-size: 1rem;
+        padding: 0.6rem 1.5rem;
+      }
+      .why-us-section h2, .vds-packages h2 {
+        font-size: 1.5em;
+      }
+      .welcome-vds-section h1 {
+        font-size: 1.8rem;
+      }
+      .welcome-vds-section .logo {
+        height: 60px;
+      }
+      nav ul li {
+        margin: 0 0.5rem;
+      }
+      nav ul li a {
+        font-size: 1em;
+      }
+      .auth-container {
+        padding: 1rem; /* Mobil cihazlarda daha az padding */
+        max-width: 90%; /* Genişlik ekranın %90’ı ile sınırlı */
+      }
+      .auth-container input,
+      .auth-container button,
+      .google-btn {
+        font-size: 0.9rem; /* Yazı boyutunu küçülttüm */
+        padding: 0.6rem; /* Padding’i azalttım */
+      }
+      .auth-container h2 {
+        font-size: 1.5rem; /* Başlık boyutunu küçülttüm */
+      }
+      .captcha-text {
+        font-size: 1rem; /* Captcha yazısını küçülttüm */
+      }
+    }
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes progress {
+      0% { width: 100%; }
+      100% { width: 0%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="g_id_onload"
+       data-client_id="640623965272-6fqe661ds6t810rq052ga49hd8esgdjq.apps.googleusercontent.com"
+       data-callback="handleCredentialResponse"
+       data-auto_prompt="false">
+  </div>
+
+  <div class="grid-container">
+    <div class="grid"></div>
+  </div>
+
+  <div class="notification" id="notification">
+    <p id="notification-text"></p>
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+  </div>
+
+  <div class="auth-overlay" id="auth-overlay">
+    <div class="auth-container show" id="login-form">
+      <h2>Giriş Yap</h2>
+      <input type="text" id="login-username" placeholder="Kullanıcı Adı" required>
+      <input type="password" id="login-password" placeholder="Şifre (min 8 karakter)" required>
+      <div class="captcha-container">
+        <span class="captcha-text" id="login-captcha-text"></span>
+        <input type="text" id="login-captcha-input" placeholder="CAPTCHA gir" required>
+      </div>
+      <button onclick="login()">Giriş Yap</button>
+      <button class="google-btn" onclick="googleLogin()">
+        <img src="https://www.google.com/favicon.ico" alt="Google Logo" class="google-logo">
+        Google ile Giriş Yap
+      </button>
+      <p class="switch" onclick="toggleAuth('register')">Hesabın yok mu? Kayıt Ol</p>
+    </div>
+    <div class="auth-container" id="register-form">
+      <h2>Kayıt Ol</h2>
+      <input type="text" id="register-username" placeholder="Kullanıcı Adı" required>
+      <input type="email" id="register-email" placeholder="Gmail Adresi (örn: example@gmail.com)" required>
+      <input type="password" id="register-password" placeholder="Şifre (min 8 karakter)" required>
+      <input type="text" id="register-discord" placeholder="Discord İsmi (örn: Kullanıcı#1234)" required>
+      <input type="text" id="register-name" placeholder="İsim (örn: Ahmet Yılmaz)" required>
+      <input type="tel" id="register-phone" placeholder="Telefon Numarası (örn: 555 123 45 67)" required>
+      <div class="captcha-container">
+        <span class="captcha-text" id="register-captcha-text"></span>
+        <input type="text" id="register-captcha-input" placeholder="CAPTCHA gir" required>
+      </div>
+      <button onclick="register()">Kayıt Ol</button>
+      <button class="google-btn" onclick="googleRegister()">
+        <img src="https://www.google.com/favicon.ico" alt="Google Logo" class="google-logo">
+        Google ile Kayıt Ol
+      </button>
+      <p class="switch" onclick="toggleAuth('login')">Hesabın var mı? Giriş Yap</p>
+    </div>
+  </div>
+
+  <nav id="navbar" class="hidden">
+    <img src="image/logo.png" alt="MineHost Logo" class="nav-logo">
+    <ul id="nav-links">
+      <li><a href="https://discord.gg/netbarinak" onclick="trackAction('Clicked Discord Link')">Discord</a></li>
+      <li><a href="/" onclick="trackAction('Clicked Home Link')">Home</a></li>
+      <li><a href="/team.html" onclick="trackAction('Clicked Team Link')">Ekip</a></li>
+      <li><a href="domain.html" onclick="trackAction('Clicked Domain Link')">Alan Adı</a></li>
+      <li><a href="profile.html" id="profile-btn">Profil</a></li>
+      <li><a href="support.html" id="support-btn" class="hidden">Destek</a></li>
+      <li><a href="#" onclick="logout()" id="logout-btn" class="hidden">Çıkış Yap</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero-section hidden" id="hero-section">
+    <h1>Sunucunu Kurmaya Sadece 2 Dakikada Başla!</h1>
+    <p>3TB İnternet Hızı Sunan NetBarınak 2022'den beri hizmet vermekte!.</p>
+    <div id="welcome-message" class="hidden" style="font-size: 1.5rem; margin: 1rem 0; background: linear-gradient(90deg, #a0a4a8, #868d8f); -webkit-background-clip: text; background-clip: text; color: transparent;">
+      Hoş Geldiniz, <span id="welcome-username"></span>!
+    </div>
+    <button class="explore-btn" onclick="scrollToVds()">⬇</button>
+    <div class="stats">
+      <div><h3>99.95%</h3><p>Uptime</p></div>
+      <div><h3>2+</h3><p>Servers</p></div>
+      <div><h3>150+</h3><p>Users</p></div>
+    </div>
+  </section>
+
+  <section class="why-us-section hidden" id="why-us-section">
+    <h2>Neden NetBarınak?</h2>
+    <div class="features">
+      <div class="feature"><h3>Designed for Performance</h3><p>We offer groundbreaking plans in the industry with the lowest price.</p></div>
+      <div class="feature"><h3>Powerful Hardware</h3><p>We use the latest Ryzen and Intel processors, NVMe M.2 SSDs.</p></div>
+      <div class="feature"><h3>DDoS Protection</h3><p>nShield (3Tbps+) DDoS protection available on every server.</p></div>
+      <div class="feature"><h3>Always Online</h3><p>Servers available 24/7 with 99.95% SLA.</p></div>
+      <div class="feature"><h3>Instant Setup</h3><p>Start using your server within minutes.</p></div>
+      <div class="feature"><h3>Fast and Friendly Support</h3><p>A human support team ready to assist you at any time.</p></div>
+    </div>
+  </section>
+
+  <section class="welcome-vds-section hidden" id="welcome-vds-section">
+    <img src="image/logo.png" alt="MineHost Logo" class="logo">
+    <h1>NetBarınak - Bilişim Hizmetleri <img src="image/logo.png" alt="MineHost Logo"></h1>
+    <p>Your trusted partner for high-performance VDS hosting solutions.</p>
+    <p class="highlight">Explore our premium VDS packages tailored for your needs.</p>
+  </section>
+
+  <section class="vds-packages hidden" id="vds-packages">
+    <h2>Nova VDS Paketleri</h2>
+    <div class="package">
+      <div>Nova 1 VDS<br>2 CPU</div><div>4 GB	DDR5 </div><div>45 GB Disk Alanı</div><div>Limitsiz Trafik</div><div>Sende Kullan!</div><div>125 ₺ (Aylık)</div>
+      <button onclick="addToCart('Nova 1 VDS', 150, '2 Cpu', '4 GB DDE5 Ram', '4GB DDR5 RAM', '45 GB Disk Alanı', 'Limitsiz Trafik')">+</button>
+    </div>
+    <div class="package">
+      <div>Nova 2 VDS<br>2 CPU</div><div>5 GB DDR5  </div><div>45	GB Disk Alanı</div><div>Limitsiz Trafik</div><div>Sende Kullan!</div><div>160 ₺ (Aylık)k</div>
+      <button onclick="addToCart('Nova 1 VDS', 150, '2 Cpu', '4 GB DDE5 Ram', '4GB DDR5 RAM', '45 GB Disk Alanı', 'Limitsiz Trafik')">+</button>
+    </div>
+    <div class="package">
+      <div>Nova-VDS 3<br>3 CPU </div><div>6 GB Ram DDR5 </div><div>50 GB Disk Boşluğu </div><div>Sende Kullan!</div><div>Limitsiz Trafik</div><div>340₺ /aylık</div>
+      <button onclick="addToCart('Nova VDS 3', 340, '6GB Ram DDR5', '3 CPU Çekirdek', '50 GB Disk Alanı', 'Sende Kullan!', 'Limitsiz Trafik')">+</button>
+    </div>
+    <div class="package">
+      <div>MH-4<br>RYZEN 9 7950X3D</div><div>3 Çekirdek CPU</div><div>12GB DDR5 RAM</div><div>120 GB Datacenter SSD</div><div>Limitsiz Trafik</div><div>530₺ /aylık</div>
+      <button onclick="addToCart('MH-4', 530, 'RYZEN 9 7950X3D', '3 Çekirdek CPU', '12GB DDR5 RAM', '120 GB Datacenter SSD', 'Limitsiz Trafik')">+</button>
+    </div>
+    <div class="package">
+      <div>MH-5<br>RYZEN 9 7950X3D</div><div>6 Çekirdek CPU</div><div>16GB DDR5 RAM</div><div>180 GB Datacenter SSD</div><div>Limitsiz Trafik</div><div>720₺ /aylık</div>
+      <button onclick="addToCart('MH-5', 720, 'RYZEN 9 7950X3D', '6 Çekirdek CPU', '16GB DDR5 RAM', '180 GB Datacenter SSD', 'Limitsiz Trafik')">+</button>
+    </div>
+    <div class="package">
+      <div>MH-6<br>RYZEN 9 7950X3D</div><div>6 Çekirdek CPU</div><div>20GB DDR5 RAM</div><div>200 GB Datacenter SSD</div><div>Limitsiz Trafik</div><div>910₺ /aylık</div>
+      <button onclick="addToCart('MH-6', 910, 'RYZEN 9 7950X3D', '6 Çekirdek CPU', '20GB DDR5 RAM', '200 GB Datacenter SSD', 'Limitsiz Trafik')">+</button>
+    </div>
+    <div class="package">
+      <div>MH-7<br>RYZEN 9 7950X3D</div><div>8 Çekirdek CPU</div><div>24GB DDR5 RAM</div><div>240 GB Datacenter SSD</div><div>Limitsiz Trafik</div><div>1100₺ /aylık</div>
+      <button onclick="addToCart('MH-7', 1100, 'RYZEN 9 7950X3D', '8 Çekirdek CPU', '24GB DDR5 RAM', '240 GB Datacenter SSD', 'Limitsiz Trafik')">+</button>
+    </div>
+    <div class="package">
+      <div>MH-8<br>RYZEN 9 7950X3D</div><div>8 Çekirdek CPU</div><div>32GB DDR5 RAM</div><div>320 GB Datacenter SSD</div><div>Limitsiz Trafik</div><div>1480₺ /aylık</div>
+      <button onclick="addToCart('MH-8', 1480, 'RYZEN 9 7950X3D', '8 Çekirdek CPU', '32GB DDR5 RAM', '320 GB Datacenter SSD', 'Limitsiz Trafik')">+</button>
+    </div>
+    <div class="package">
+      <div>MH-9<br>RYZEN 9 7950X3D</div><div>16 Çekirdek CPU</div><div>64GB DDR5 RAM</div><div>480 GB Datacenter SSD</div><div>Limitsiz Trafik</div><div>2950₺ /aylık</div>
+      <button onclick="addToCart('MH-9', 2950, 'RYZEN 9 7950X3D', '16 Çekirdek CPU', '64GB DDR5 RAM', '480 GB Datacenter SSD', 'Limitsiz Trafik')">+</button>
+    </div>
+  </section>
+
+  <footer class="hidden" id="footer">
+    <img src="image/logo.png" alt="MineHost Logo" class="logo">
+    <p>Licensed by NetBarınak</p>
+    <p>© 2025 NetBarınak. All rights reserved.</p>
+    <p class="made-by">Made By NetBarınak</p>
+  </footer>
+
+  <script>
+    const webhookUrl = "https://canary.discord.com/api/webhooks/1354832002607747135/GrFKro7MsPX2p8AhtbUxjNWxMIjx3vD0_hMmZunAdGoRC0GsqTkaejN7UHksygau8zRN";
+    const discordLink = "https://discord.gg/netbarinak";
+    let currentUser = null;
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    let loginCaptcha = '';
+    let registerCaptcha = '';
+    const loggedInIP = localStorage.getItem('loggedInIP');
+
+    function handleCredentialResponse(response) {
+      const data = jwt_decode(response.credential);
+      const email = data.email;
+      const name = data.name;
+      
+      if (!email.endsWith('@gmail.com')) {
+        showNotification("Lütfen bir Gmail hesabı kullanın!");
+        return;
+      }
+
+      let foundUser = null;
+      for (let user in users) {
+        if (users[user].email === email) {
+          foundUser = user;
+          break;
+        }
+      }
+
+      if (window.googleLoginActive) {
+        if (foundUser) {
+          currentUser = foundUser;
+          localStorage.setItem('currentUser', foundUser);
+          localStorage.setItem('loggedInIP', 'simulated-ip');
+          showNotification(`Hoş geldiniz, ${foundUser}! (Google ile giriş)`);
+          showWelcomeMessage(foundUser);
+          sendDiscordNotification(`Google Login: ${foundUser} | Email: ${email}`);
+          setTimeout(showContent, 1000);
+        } else {
+          showNotification("Bu Gmail ile kayıtlı bir hesap bulunamadı! Lütfen kayıt olun.");
+        }
+      } else if (window.googleRegisterActive) {
+        if (foundUser) {
+          showNotification("Bu Gmail adresi zaten kayıtlı!");
+          return;
+        }
+
+        const username = document.getElementById('register-username').value;
+        const discord = document.getElementById('register-discord').value;
+        const name = document.getElementById('register-name').value;
+        const phone = document.getElementById('register-phone').value;
+        const captchaInput = document.getElementById('register-captcha-input').value;
+
+        if (!username || !discord || !name || !phone) {
+          showNotification("Lütfen tüm alanları doldurun!");
+          return;
+        }
+
+        if (captchaInput !== registerCaptcha) {
+          showNotification("CAPTCHA yanlış!");
+          refreshCaptcha('register');
+          return;
+        }
+
+        if (users[username]) {
+          showNotification("Bu kullanıcı adı zaten alınmış!");
+          return;
+        }
+
+        const password = Math.random().toString(36).slice(-8) + "Google";
+        users[username] = { 
+          password, 
+          email, 
+          discord, 
+          name, 
+          phone, 
+          id: Date.now().toString(),
+          googleId: data.sub 
+        };
+        localStorage.setItem('users', JSON.stringify(users));
+        currentUser = username;
+        localStorage.setItem('currentUser', username);
+        localStorage.setItem('loggedInIP', 'simulated-ip');
+        showNotification("Google ile kayıt başarılı! Hoş geldiniz!");
+        showWelcomeMessage(username);
+        sendDiscordNotification(`Google Registration: ${username} | Email: ${email} | Discord: ${discord} | Name: ${name} | Phone: ${phone}`);
+        sendThankYouEmail(email);
+        setTimeout(showContent, 1000);
+      }
+    }
+
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      const notificationText = document.getElementById('notification-text');
+      notificationText.textContent = message;
+      notification.classList.add('show');
+      setTimeout(() => notification.classList.remove('show'), 5000);
+    }
+
+    function sendDiscordNotification(message) {
+      const payload = { content: message };
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).catch(error => console.error("Webhook hatası:", error));
+    }
+
+    function trackAction(action) {
+      const message = `User Action: ${action}${currentUser ? ` | User: ${currentUser}` : ''}`;
+      showNotification(action);
+      sendDiscordNotification(message);
+    }
+
+    function scrollToVds() {
+      trackAction('Clicked EXPLORE Button');
+      const vdsSection = document.getElementById('vds-packages');
+      vdsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function generateCaptcha() {
+      const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+      let captcha = '';
+      for (let i = 0; i < 6; i++) {
+        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return captcha;
+    }
+
+    function refreshCaptcha(type) {
+      if (type === 'login') {
+        loginCaptcha = generateCaptcha();
+        document.getElementById('login-captcha-text').textContent = loginCaptcha;
+      } else {
+        registerCaptcha = generateCaptcha();
+        document.getElementById('register-captcha-text').textContent = registerCaptcha;
+      }
+    }
+
+    function showContent() {
+      const overlay = document.getElementById('auth-overlay');
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        document.getElementById('navbar').classList.remove('hidden');
+        document.getElementById('navbar').classList.add('show');
+        document.getElementById('hero-section').classList.remove('hidden');
+        document.getElementById('hero-section').classList.add('show');
+        document.getElementById('why-us-section').classList.remove('hidden');
+        document.getElementById('why-us-section').classList.add('show');
+        document.getElementById('welcome-vds-section').classList.remove('hidden');
+        document.getElementById('welcome-vds-section').classList.add('show');
+        document.getElementById('vds-packages').classList.remove('hidden');
+        document.getElementById('vds-packages').classList.add('show');
+        document.getElementById('footer').classList.remove('hidden');
+        document.getElementById('footer').classList.add('show');
+        document.getElementById('logout-btn').classList.remove('hidden');
+        document.getElementById('support-btn').classList.remove('hidden');
+      }, 500);
+    }
+
+    function hideContent() {
+      const overlay = document.getElementById('auth-overlay');
+      overlay.classList.remove('hidden');
+      setTimeout(() => {
+        overlay.style.opacity = '1';
+        document.getElementById('navbar').classList.add('hidden');
+        document.getElementById('hero-section').classList.add('hidden');
+        document.getElementById('why-us-section').classList.add('hidden');
+        document.getElementById('welcome-vds-section').classList.add('hidden');
+        document.getElementById('vds-packages').classList.add('hidden');
+        document.getElementById('footer').classList.add('hidden');
+        document.getElementById('logout-btn').classList.add('hidden');
+        document.getElementById('support-btn').classList.add('hidden');
+      }, 100);
+    }
+
+    function checkAutoLogin() {
+      const storedUser = localStorage.getItem('currentUser');
+      const loggedInIP = localStorage.getItem('loggedInIP');
+      if (loggedInIP === 'simulated-ip' && storedUser && users[storedUser]) {
+        currentUser = storedUser;
+        showNotification(`Hoş geldiniz, ${currentUser}! (Otomatik giriş)`);
+        setTimeout(showContent, 1000);
+      } else {
+        hideContent();
+      }
+    }
+
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email) && email.endsWith('@gmail.com');
+    }
+
+    async function verifyEmail(email) {
+      if (!isValidEmail(email)) return false;
+      return true;
+    }
+
+    async function register() {
+      const username = document.getElementById('register-username').value;
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      const discord = document.getElementById('register-discord').value;
+      const name = document.getElementById('register-name').value;
+      const phone = document.getElementById('register-phone').value;
+      const captchaInput = document.getElementById('register-captcha-input').value;
+
+      if (!username || !email || !password || !discord || !name || !phone) {
+        showNotification("Lütfen tüm alanları doldurun!");
+        return;
+      }
+
+      if (!isValidEmail(email)) {
+        showNotification("Lütfen geçerli bir Gmail adresi girin!");
+        return;
+      }
+      
+      for (let user in users) {
+        if (users[user].email === email) {
+          showNotification("Bu Gmail adresi zaten kayıtlı!");
+          return;
+        }
+      }
+
+      const isEmailValid = await verifyEmail(email);
+      if (!isEmailValid) {
+        showNotification("Bu e-posta adresi geçersiz!");
+        return;
+      }
+      if (password.length < 8) {
+        showNotification("Şifre en az 8 karakter olmalı!");
+        return;
+      }
+      if (captchaInput !== registerCaptcha) {
+        showNotification("CAPTCHA yanlış!");
+        refreshCaptcha('register');
+        return;
+      }
+      if (users[username]) {
+        showNotification("Bu kullanıcı adı zaten alınmış!");
+        return;
+      }
+
+      users[username] = { 
+        password, 
+        email, 
+        discord, 
+        name, 
+        phone, 
+        id: Date.now().toString() 
+      };
+      localStorage.setItem('users', JSON.stringify(users));
+      currentUser = username;
+      localStorage.setItem('currentUser', username);
+      localStorage.setItem('loggedInIP', 'simulated-ip');
+      showNotification("Kayıt başarılı! Hoş geldiniz! Profil bilgilerinizi güncellemek için Profil sayfasına gidin.");
+      showWelcomeMessage(username);
+      await sendThankYouEmail(email);
+      sendDiscordNotification(`New Registration: ${username} | Email: ${email} | Discord: ${discord} | Name: ${name} | Phone: ${phone}`);
+      setTimeout(showContent, 1000);
+    }
+
+    function login() {
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      const captchaInput = document.getElementById('login-captcha-input').value;
+
+      if (password.length < 8) {
+        showNotification("Şifre en az 8 karakter olmalı!");
+        return;
+      }
+      if (captchaInput !== loginCaptcha) {
+        showNotification("CAPTCHA yanlış!");
+        refreshCaptcha('login');
+        return;
+      }
+      if (users[username] && users[username].password === password) {
+        currentUser = username;
+        localStorage.setItem('currentUser', username);
+        localStorage.setItem('loggedInIP', 'simulated-ip');
+        showNotification(`Hoş geldiniz, ${username}!`);
+        showWelcomeMessage(username);
+        setTimeout(showContent, 1000);
+      } else {
+        showNotification("Kullanıcı adı veya şifre yanlış!");
+      }
+    }
+
+    function googleLogin() {
+      window.googleLoginActive = true;
+      window.googleRegisterActive = false;
+      google.accounts.id.prompt();
+    }
+
+    function googleRegister() {
+      window.googleRegisterActive = true;
+      window.googleLoginActive = false;
+      google.accounts.id.prompt();
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('loggedInIP');
+      google.accounts.id.disableAutoSelect();
+      showNotification("Çıkış yaptınız!");
+      setTimeout(() => {
+        hideContent();
+        toggleAuth('login');
+        refreshCaptcha('login');
+      }, 1000);
+    }
+
+    function toggleAuth(form) {
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      if (form === 'login') {
+        registerForm.classList.remove('show');
+        setTimeout(() => loginForm.classList.add('show'), 500);
+      } else {
+        loginForm.classList.remove('show');
+        setTimeout(() => registerForm.classList.add('show'), 500);
+      }
+    }
+
+    async function sendThankYouEmail(email) {
+      const message = `
+**Teşekkür Mesajı Gönderildi**
+- **Kime**: ${email}
+- **Gönderen**: poyaz3342@gmail.com
+- **Konu**: Netbarınak'a Hoş Geldiniz!
+- **Mesaj**: 
+  Sayın ${currentUser || 'Kullanıcı'},
+  NetBarınak'a kaydolduğunuz için teşekkür ederiz!
+  İyi günler dileriz,
+  NetBarınak Ekibi
+      `;
+      sendDiscordNotification(message);
+    }
+
+    function showWelcomeMessage(username) {
+      const welcomeMessage = document.getElementById('welcome-message');
+      const welcomeUsername = document.getElementById('welcome-username');
+      welcomeUsername.textContent = username || 'Kullanıcı';
+      welcomeMessage.classList.remove('hidden');
+      setTimeout(() => welcomeMessage.classList.add('hidden'), 5000);
+    }
+
+    function addToCart(packageName, price, processor, cpu, ram, ssd, traffic) {
+      if (!currentUser || !users[currentUser]) {
+        showNotification("Lütfen giriş yapın!");
+        setTimeout(() => window.location.href = 'index.html', 1000);
+        return;
+      }
+      if (!users[currentUser].phone) {
+        showNotification("Telefon numarası eklemeden satın alım yapamazsınız! Profil sayfasına yönlendiriliyorsunuz.");
+        setTimeout(() => window.location.href = 'profile.html', 1000);
+        return;
+      }
+
+      const userId = users[currentUser].id || 'Bilinmeyen ID';
+      const detailedMessage = `
+**New Order Placed!**
+- **User**: ${currentUser}
+- **User ID**: ${userId}
+- **Phone**: ${users[currentUser].phone || 'Telefon numarası belirtilmemiş'}
+- **Package**: ${packageName}
+- **Processor**: ${processor}
+- **CPU**: ${cpu}
+- **RAM**: ${ram}
+- **SSD**: ${ssd}
+- **Traffic**: ${traffic}
+- **Price**: ${price}₺ /aylık
+- **Order Link**: ${discordLink}
+- **Timestamp**: ${new Date().toISOString()}
+      `;
+      showNotification(`Ordered ${packageName} for ${price}₺`);
+      sendDiscordNotification(detailedMessage);
+
+      const url = `payment.html?packageName=${encodeURIComponent(packageName)}&price=${price}&processor=${encodeURIComponent(processor)}&cpu=${encodeURIComponent(cpu)}&ram=${encodeURIComponent(ram)}&ssd=${encodeURIComponent(ssd)}&traffic=${encodeURIComponent(traffic)}&user=${encodeURIComponent(currentUser)}&userId=${encodeURIComponent(userId)}`;
+      window.open(url, '_blank');
+    }
+
+    window.onload = function() {
+      refreshCaptcha('login');
+      refreshCaptcha('register');
+      checkAutoLogin();
+      
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js';
+      script.onload = function() {
+        console.log('jwt-decode loaded');
+      };
+      document.head.appendChild(script);
+    };
+  </script>
+</body>
+</html>

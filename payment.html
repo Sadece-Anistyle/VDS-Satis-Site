@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ödeme - Paket Adı</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    .payment-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: rgba(0, 102, 255, 0.1);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 20px;
+      color: #fff;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 2;
+    }
+    h2 {
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .payment-option {
+      margin: 1rem 0;
+      padding: 1rem;
+      background: rgba(0, 102, 255, 0.2);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .payment-option:hover {
+      background: rgba(0, 102, 255, 0.4);
+      transform: scale(1.05);
+    }
+    a {
+      color: #00ccff;
+      text-decoration: none;
+    }
+    .grid-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(to bottom, #000000 0%, #0099ff 100%);
+    }
+    .grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 153, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 153, 255, 0.15) 1px, transparent 1px);
+      background-size: 100px 100px;
+      filter: drop-shadow(0 0 5px rgba(0, 153, 255, 0.3));
+    }
+    .grid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+    }
+    .coupon-section {
+      margin: 1rem 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+    .coupon-section input {
+      padding: 0.5rem;
+      width: 50%;
+      border-radius: 5px;
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .coupon-section select {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .coupon-section button {
+      padding: 0.5rem 1rem;
+      background: linear-gradient(to left, #0066ff, #00ccff);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .coupon-section button:hover {
+      background: linear-gradient(to left, #0052cc, #0099cc);
+      transform: scale(1.05);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 102, 255, 0.2);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 10px;
+      padding: 1rem;
+      color: #fff;
+      z-index: 1000;
+      display: none;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.5s ease;
+      backdrop-filter: blur(5px);
+    }
+    .notification.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .notification .progress-bar {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      margin-top: 0.5rem;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .notification .progress-bar .progress {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      animation: progress 5s linear forwards;
+    }
+    @keyframes progress {
+      0% { width: 100%; }
+      100% { width: 0%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-container">
+    <div class="grid"></div>
+  </div>
+
+  <div class="notification" id="notification">
+    <p id="notification-text"></p>
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+  </div>
+
+  <div class="payment-container">
+    <h2 id="package-title">Paket Adı</h2>
+    <p><strong>Paket İçeriği:</strong></p>
+    <p id="processor">Processor: -</p>
+    <p id="cpu">CPU: -</p>
+    <p id="ram">RAM: -</p>
+    <p id="ssd">SSD: -</p>
+    <p id="traffic">Traffic: -</p>
+    <p><strong>Fiyat:</strong> <span id="price">-</span>₺ /aylık</p>
+    <div class="coupon-section">
+      <select id="purchase-type">
+        <option value="vds">VDS</option>
+        <option value="domain">Domain</option>
+      </select>
+      <input type="text" id="coupon-input" placeholder="İndirim Kodu Girin">
+      <button onclick="applyCoupon()">Uygula</button>
+    </div>
+    <hr>
+    <h3>Ödeme Yöntemleri</h3>
+    <div class="payment-option" onclick="window.location.href='https://discord.gg/netbarinak'">
+      <strong>Discord</strong><br>
+      Discord destek üzerinden alım yapmak isterseniz <a href="https://discord.gg/netbarinak" target="_blank">buraya tıklayın</a>.
+    </div>
+    <div class="payment-option" onclick="handleIbanClick()">
+      <strong>IBAN</strong><br>
+      💳 <strong>IBAN:</strong> TR39 0001 0090 1077 8177 4050 01<br>
+      Ödemeyi yaptıktan sonra Discord üzerinden bize ulaşın.
+    </div>
+  </div>
+
+  <script src="kupon.js"></script>
+  <script>
+    const webhookUrl = "https://canary.discord.com/api/webhooks/1354832002607747135/GrFKro7MsPX2p8AhtbUxjNWxMIjx3vD0_hMmZunAdGoRC0GsqTkaejN7UHksygau8zRN";
+    const discordLink = "htthttps://discord.gg/hgUMPJN9";
+
+    // Function to get URL parameters
+    function getUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        packageName: params.get('packageName') || 'Bilinmeyen Paket',
+        price: parseFloat(params.get('price')) || 0,
+        processor: params.get('processor') || '-',
+        cpu: params.get('cpu') || '-',
+        ram: params.get('ram') || '-',
+        ssd: params.get('ssd') || '-',
+        traffic: params.get('traffic') || '-',
+        user: params.get('user') || 'Bilinmeyen Kullanıcı',
+        userId: params.get('userId') || 'Bilinmeyen ID'
+      };
+    }
+
+    // Populate the page with URL parameters
+    let params = getUrlParams();
+    let originalPrice = params.price;
+    let currentPrice = originalPrice;
+
+    document.getElementById('package-title').textContent = `${params.packageName} Paket Ödeme`;
+    document.getElementById('processor').textContent = `Processor: ${params.processor}`;
+    document.getElementById('cpu').textContent = `CPU: ${params.cpu}`;
+    document.getElementById('ram').textContent = `RAM: ${params.ram}`;
+    document.getElementById('ssd').textContent = `SSD: ${params.ssd}`;
+    document.getElementById('traffic').textContent = `Traffic: ${params.traffic}`;
+    document.getElementById('price').textContent = currentPrice;
+
+    // Load used coupons from localStorage
+    let usedCoupons = JSON.parse(localStorage.getItem(`usedCoupons_${params.user}`)) || {};
+
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      const notificationText = document.getElementById('notification-text');
+      notificationText.textContent = message;
+      notification.classList.add('show');
+      setTimeout(() => notification.classList.remove('show'), 5000);
+    }
+
+    function applyCoupon() {
+      const couponInput = document.getElementById('coupon-input').value.trim();
+      const purchaseType = document.getElementById('purchase-type').value;
+      const priceElement = document.getElementById('price');
+
+      // Check if coupon exists
+      if (!coupons[couponInput]) {
+        currentPrice = originalPrice;
+        priceElement.textContent = currentPrice;
+        showNotification("Geçersiz indirim kodu!");
+        return;
+      }
+
+      const coupon = coupons[couponInput];
+      const couponType = coupon.type;
+
+      // Check if coupon type matches purchase type
+      if (couponType !== "both" && couponType !== purchaseType) {
+        currentPrice = originalPrice;
+        priceElement.textContent = currentPrice;
+        showNotification(`Bu kupon ${purchaseType === "vds" ? "Domain" : "VDS"} için geçerli değil!`);
+        return;
+      }
+
+      // Check if user has already used this coupon
+      if (usedCoupons[couponInput]) {
+        currentPrice = originalPrice;
+        priceElement.textContent = currentPrice;
+        showNotification("Bu kuponu daha önce kullandınız!");
+        return;
+      }
+
+      // Apply discount
+      const discountPercentage = coupon.discount;
+      currentPrice = Math.round(originalPrice * (1 - discountPercentage / 100));
+      priceElement.textContent = currentPrice;
+      showNotification(`İndirim kodu uygulandı! %${discountPercentage} indirim kazandınız.`);
+
+      // Mark coupon as used for this user
+      usedCoupons[couponInput] = true;
+      localStorage.setItem(`usedCoupons_${params.user}`, JSON.stringify(usedCoupons));
+
+      // Send Discord notification
+      sendDiscordNotification(`Coupon Applied: ${couponInput} | Discount: ${discountPercentage}% | New Price: ${currentPrice}₺ | Package: ${params.packageName} | Type: ${purchaseType} | User: ${params.user}`);
+    }
+
+    function handleIbanClick() {
+      const purchaseType = document.getElementById('purchase-type').value;
+      const message = `
+**IBAN Payment Initiated**
+- **User**: ${params.user}
+- **User ID**: ${params.userId}
+- **Package**: ${params.packageName}
+- **Price**: ${currentPrice}₺ /${purchaseType === "vds" ? "aylık" : "yıllık"}
+- **Type**: ${purchaseType}
+- **Timestamp**: ${new Date().toISOString()}
+- **Redirecting to**: ${discordLink}
+      `;
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: message })
+      }).then(() => {
+        window.location.href = discordLink;
+      }).catch(error => console.error("Webhook hatası:", error));
+    }
+
+    function sendDiscordNotification(message) {
+      const payload = { content: message };
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).catch(error => console.error("Webhook hatası:", error));
+    }
+  </script>
+</body>
+</html>

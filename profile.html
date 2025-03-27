@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetBarınak - Profil</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    nav {
+      padding: 1rem;
+      position: relative;
+      z-index: 2;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.5s ease;
+    }
+    nav.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .nav-logo {
+      position: absolute;
+      left: 20px;
+      height: 40px;
+    }
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    nav ul li {
+      margin: 0 1rem;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.2em;
+      transition: all 0.3s ease;
+      touch-action: manipulation;
+    }
+    nav ul li a:hover {
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transform: scale(1.1);
+    }
+    .grid-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(to bottom, #000000 0%, #0099ff 100%);
+    }
+    .grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 153, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 153, 255, 0.15) 1px, transparent 1px);
+      background-size: 100px 100px;
+      filter: drop-shadow(0 0 5px rgba(0, 153, 255, 0.3));
+    }
+    .grid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 102, 255, 0.2);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 10px;
+      padding: 1rem;
+      color: #fff;
+      z-index: 1000;
+      display: none;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.5s ease;
+      backdrop-filter: blur(5px);
+    }
+    .notification.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .notification .progress-bar {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      margin-top: 0.5rem;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .notification .progress-bar .progress {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      animation: progress 5s linear forwards;
+    }
+    .profile-container {
+      background: rgba(0, 102, 255, 0.1);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      color: #fff;
+      width: 90%;
+      max-width: 350px;
+      margin: 5rem auto;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.5s ease 0.2s;
+    }
+    .profile-container.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .profile-container h2 {
+      text-align: center;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .profile-container input {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 5px;
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      box-sizing: border-box;
+    }
+    .profile-container button {
+      width: 100%;
+      padding: 0.8rem;
+      background: linear-gradient(to left, #0066ff, #00ccff);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.3s ease;
+      touch-action: manipulation;
+    }
+    .profile-container button:hover {
+      background: linear-gradient(to left, #0052cc, #0099cc);
+      transform: scale(1.05);
+    }
+    .phone-container {
+      display: flex;
+      align-items: center;
+    }
+    .phone-prefix {
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-right: none;
+      border-radius: 5px 0 0 5px;
+      color: #fff;
+    }
+    .phone-input {
+      flex: 1;
+      border-left: none;
+      border-radius: 0 5px 5px 0;
+    }
+    .missing-phone {
+      border: 2px solid red !important;
+    }
+    .hidden {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      nav ul li {
+        margin: 0 0.5rem;
+      }
+      nav ul li a {
+        font-size: 1em;
+      }
+      .profile-container {
+        padding: 1.5rem;
+      }
+    }
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes progress {
+      0% { width: 100%; }
+      100% { width: 0%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-container">
+    <div class="grid"></div>
+  </div>
+
+  <div class="notification" id="notification">
+    <p id="notification-text"></p>
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+  </div>
+
+  <nav id="navbar">
+    <img src="image/logo.png" alt="MineHost Logo" class="nav-logo">
+    <ul id="nav-links">
+      <li><a href="https://discord.gg/netbarinak">Discord</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="/team.html">Ekip</a></li>
+      <li><a href="profile.html">Profil</a></li>
+      <li><a href="support.html">Destek</a></li>
+      <li><a href="#" onclick="logout()">Çıkış Yap</a></li>
+    </ul>
+  </nav>
+
+  <div class="profile-container" id="profile-container">
+    <h2>Profil</h2>
+    <input type="text" id="profile-username" placeholder="Kullanıcı Adı" readonly>
+    <input type="email" id="profile-email" placeholder="E-posta" readonly>
+    <input type="text" id="profile-discord" placeholder="Discord İsmi" readonly>
+    <div class="phone-container">
+      <span class="phone-prefix">+90 -</span>
+      <input type="text" id="profile-phone" class="phone-input" placeholder="000 000 00 00">
+    </div>
+    <button onclick="saveProfile()">Kaydet</button>
+  </div>
+
+  <script>
+    const webhookUrl = "https://discord.com/api/webhooks/1353001879898165360/ghTyhQVUARrhKj91vV9q5Ud0xQaGJepel1aX4Ib-U_KBSqfxwMHID5jhkhHtl7CJNmes";
+    let currentUser = localStorage.getItem('currentUser');
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      const notificationText = document.getElementById('notification-text');
+      notificationText.textContent = message;
+      notification.classList.add('show');
+      setTimeout(() => notification.classList.remove('show'), 5000);
+    }
+
+    function sendDiscordNotification(message) {
+      const payload = { content: message };
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).catch(error => console.error("Webhook hatası:", error));
+    }
+
+    function formatPhoneNumber(value) {
+      let cleaned = value.replace(/\D/g, '');
+      let formatted = '';
+      for (let i = 0; i < cleaned.length; i++) {
+        if (i === 3 || i === 6 || i === 8) formatted += ' ';
+        formatted += cleaned[i];
+      }
+      return formatted;
+    }
+
+    function loadProfile() {
+      if (!currentUser || !users[currentUser]) {
+        showNotification("Lütfen giriş yapın!");
+        setTimeout(() => window.location.href = 'index.html', 1000);
+        return;
+      }
+      const user = users[currentUser];
+      document.getElementById('profile-username').value = currentUser;
+      document.getElementById('profile-email').value = user.email || '';
+      document.getElementById('profile-discord').value = user.discord || '';
+      document.getElementById('profile-phone').value = user.phone ? user.phone.replace('+90-', '') : '';
+      const phoneInput = document.getElementById('profile-phone');
+      if (!user.phone) phoneInput.classList.add('missing-phone');
+      else phoneInput.classList.remove('missing-phone');
+      document.getElementById('navbar').classList.add('show');
+      document.getElementById('profile-container').classList.add('show');
+    }
+
+    function saveProfile() {
+      const phoneInput = document.getElementById('profile-phone');
+      let phone = phoneInput.value.replace(/\D/g, '');
+      if (phone.length !== 10) {
+        showNotification("Telefon numarası 10 rakam olmalı! Yine de kaydedebilirsiniz.");
+      }
+      const formattedPhone = `+90-${formatPhoneNumber(phone)}`;
+      users[currentUser].phone = formattedPhone;
+      localStorage.setItem('users', JSON.stringify(users));
+      showNotification("Profil kaydedildi!");
+      phoneInput.classList.remove('missing-phone');
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('loggedInIP');
+      showNotification("Çıkış yaptınız!");
+      setTimeout(() => window.location.href = 'index.html', 1000);
+    }
+
+    window.onload = function() {
+      loadProfile();
+      const phoneInput = document.getElementById('profile-phone');
+      phoneInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        e.target.value = formatPhoneNumber(value);
+      });
+    };
+  </script>
+</body>
+</html>

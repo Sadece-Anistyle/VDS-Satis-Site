@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetBarınak - Destek</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      transition: opacity 2s ease; /* Yavaş kaybolma animasyonu */
+    }
+    body.fade-out {
+      opacity: 0;
+    }
+    nav {
+      padding: 1rem;
+      position: relative;
+      z-index: 2;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.5s ease;
+    }
+    nav.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .nav-logo {
+      position: absolute;
+      left: 20px;
+      height: 40px;
+    }
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    nav ul li {
+      margin: 0 1rem;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.2em;
+      transition: all 0.3s ease;
+      touch-action: manipulation;
+    }
+    nav ul li a:hover {
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transform: scale(1.1);
+    }
+    .grid-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(to bottom, #000000 0%, #0099ff 100%);
+    }
+    .grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 153, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 153, 255, 0.15) 1px, transparent 1px);
+      background-size: 100px 100px;
+      filter: drop-shadow(0 0 5px rgba(0, 153, 255, 0.3));
+    }
+    .grid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 102, 255, 0.2);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 10px;
+      padding: 1rem;
+      color: #fff;
+      z-index: 1000;
+      display: none;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.5s ease;
+      backdrop-filter: blur(5px);
+    }
+    .notification.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .notification .progress-bar {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      margin-top: 0.5rem;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .notification .progress-bar .progress {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      animation: progress 5s linear forwards;
+    }
+    .support-container {
+      background: rgba(0, 102, 255, 0.1);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      color: #fff;
+      width: 90%;
+      max-width: 500px;
+      margin: 5rem auto;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.5s ease 0.2s;
+    }
+    .support-container.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .support-container h2 {
+      text-align: center;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .support-container input,
+    .support-container textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 5px;
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      box-sizing: border-box;
+    }
+    .support-container textarea {
+      height: 150px;
+      resize: none;
+    }
+    .support-container button {
+      width: 100%;
+      padding: 0.8rem;
+      background: linear-gradient(to left, #0066ff, #00ccff);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.3s ease;
+      touch-action: manipulation;
+    }
+    .support-container button:hover {
+      background: linear-gradient(to left, #0052cc, #0099cc);
+      transform: scale(1.05);
+    }
+    .hidden {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      nav ul li {
+        margin: 0 0.5rem;
+      }
+      nav ul li a {
+        font-size: 1em;
+      }
+      .support-container {
+        padding: 1.5rem;
+      }
+    }
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes progress {
+      0% { width: 100%; }
+      100% { width: 0%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-container">
+    <div class="grid"></div>
+  </div>
+
+  <div class="notification" id="notification">
+    <p id="notification-text"></p>
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+  </div>
+
+  <nav id="navbar">
+    <img src="image/logo.png" alt="MineHost Logo" class="nav-logo">
+    <ul id="nav-links">
+      <li><a href="https://discord.gg/netbarinak">Discord</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="/team.html">Ekip</a></li>
+      <li><a href="profile.html">Profil</a></li>
+      <li><a href="support.html">Destek</a></li>
+      <li><a href="#" onclick="logout()">Çıkış Yap</a></li>
+    </ul>
+  </nav>
+
+  <div class="support-container" id="support-container">
+    <h2>Destek Talebi Oluştur</h2>
+    <input type="email" id="support-email" placeholder="Gmail Adresiniz (örn: example@gmail.com)" required>
+    <input type="text" id="support-subject" placeholder="Konu" required>
+    <textarea id="support-message" placeholder="Açıklama" required></textarea>
+    <button onclick="sendSupportRequest()">Gönder</button>
+  </div>
+
+  <script>
+    const webhookUrl = "https://canary.discord.com/api/webhooks/1354832002607747135/GrFKro7MsPX2p8AhtbUxjNWxMIjx3vD0_hMmZunAdGoRC0GsqTkaejN7UHksygau8zRN";
+    const discordLink = "https://discord.gg/netbarinak";
+    let currentUser = localStorage.getItem('currentUser');
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      const notificationText = document.getElementById('notification-text');
+      notificationText.textContent = message;
+      notification.classList.add('show');
+      setTimeout(() => notification.classList.remove('show'), 5000);
+    }
+
+    function sendDiscordNotification(message) {
+      const payload = { content: message };
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).catch(error => console.error("Webhook hatası:", error));
+    }
+
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email) && email.endsWith('@gmail.com');
+    }
+
+    function sendSupportRequest() {
+      const email = document.getElementById('support-email').value;
+      const subject = document.getElementById('support-subject').value;
+      const message = document.getElementById('support-message').value;
+
+      if (!isValidEmail(email)) {
+        showNotification("Lütfen geçerli bir Gmail adresi girin!");
+        return;
+      }
+      if (!subject) {
+        showNotification("Lütfen bir konu girin!");
+        return;
+      }
+      if (!message) {
+        showNotification("Lütfen bir açıklama girin!");
+        return;
+      }
+
+      // Destek talebini minehostin@gmail.com adresine gönder (simülasyon)
+      const supportMessage = `
+**Yeni Destek Talebi**
+- **Gönderen**: ${email}
+- **Alıcı**: poyaz3342@gmail.com
+- **Konu**: ${subject}
+- **Açıklama**: ${message}
+- **Kullanıcı**: ${currentUser || 'Giriş yapmamış'}
+- **Timestamp**: ${new Date().toISOString()}
+      `;
+      sendDiscordNotification(supportMessage);
+      showNotification("Destek talebiniz gönderildi! Discord'a yönlendiriliyorsunuz...");
+
+      // Yavaşça kaybolma animasyonu
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = discordLink;
+      }, 2000); // 2 saniye animasyon süresi
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('loggedInIP');
+      showNotification("Çıkış yaptınız!");
+      setTimeout(() => window.location.href = 'index.html', 1000);
+    }
+
+    window.onload = function() {
+      document.getElementById('navbar').classList.add('show');
+      document.getElementById('support-container').classList.add('show');
+    };
+  </script>
+</body>
+</html>

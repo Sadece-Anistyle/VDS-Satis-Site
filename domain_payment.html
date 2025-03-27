@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ödeme - Alan Adı</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    .payment-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: rgba(0, 102, 255, 0.1);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 20px;
+      color: #fff;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 2;
+      box-sizing: border-box;
+    }
+    h2 {
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 1.5rem;
+      font-size: 2em;
+    }
+    p {
+      font-size: 1.1em;
+      margin: 0.5rem 0;
+    }
+    hr {
+      border: 0;
+      height: 1px;
+      background: rgba(0, 204, 255, 0.3);
+      margin: 1.5rem 0;
+    }
+    h3 {
+      font-size: 1.5em;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+    .payment-option {
+      margin: 1rem 0;
+      padding: 1.5rem;
+      background: rgba(0, 102, 255, 0.2);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+    .payment-option:hover {
+      background: rgba(0, 102, 255, 0.4);
+      transform: scale(1.05);
+    }
+    .payment-option strong {
+      font-size: 1.2em;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    a {
+      color: #00ccff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    a:hover {
+      color: #0099cc;
+    }
+    .grid-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(to bottom, #000000 0%, #0099ff 100%);
+    }
+    .grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 153, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 153, 255, 0.15) 1px, transparent 1px);
+      background-size: 100px 100px;
+      filter: drop-shadow(0 0 5px rgba(0, 153, 255, 0.3));
+    }
+    .grid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 102, 255, 0.2);
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      border-radius: 10px;
+      padding: 1rem;
+      color: #fff;
+      z-index: 1000;
+      display: none;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.5s ease;
+      backdrop-filter: blur(5px);
+    }
+    .notification.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .notification .progress-bar {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      margin-top: 0.5rem;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .notification .progress-bar .progress {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #0066ff, #00ccff);
+      animation: progress 5s linear forwards;
+    }
+    .coupon-section {
+      margin: 1rem 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+    .coupon-section input {
+      padding: 0.5rem;
+      width: 50%;
+      border-radius: 5px;
+      border: 1px solid rgba(0, 204, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .coupon-section button {
+      padding: 0.5rem 1rem;
+      background: linear-gradient(to left, #0066ff, #00ccff);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .coupon-section button:hover {
+      background: linear-gradient(to left, #0052cc, #0099cc);
+      transform: scale(1.05);
+    }
+    @media (max-width: 768px) {
+      .payment-container {
+        margin: 1rem;
+        padding: 1.5rem;
+        max-width: 90%;
+      }
+      h2 {
+        font-size: 1.5em;
+      }
+      h3 {
+        font-size: 1.2em;
+      }
+      .payment-option {
+        padding: 1rem;
+        font-size: 0.9em;
+      }
+      p {
+        font-size: 1em;
+      }
+      .coupon-section input {
+        width: 60%;
+      }
+    }
+    @media (max-width: 480px) {
+      .payment-container {
+        padding: 1rem;
+      }
+      .payment-option {
+        font-size: 0.85em;
+      }
+      .coupon-section input {
+        width: 70%;
+      }
+    }
+    @keyframes progress {
+      0% { width: 100%; }
+      100% { width: 0%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-container">
+    <div class="grid"></div>
+  </div>
+
+  <div class="notification" id="notification">
+    <p id="notification-text"></p>
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+  </div>
+
+  <div class="payment-container">
+    <h2 id="domain-title">Alan Adı Ödeme</h2>
+    <p><strong>Alan Adı:</strong> <span id="domain-name">-</span></p>
+    <p><strong>Fiyat:</strong> <span id="price">-</span>₺ /yıllık</p>
+    <div class="coupon-section">
+      <input type="text" id="coupon-input" placeholder="İndirim Kodu Girin">
+      <button onclick="applyCoupon()">Uygula</button>
+    </div>
+    <hr>
+    <h3>Ödeme Yöntemleri</h3>
+    <div class="payment-option" onclick="handleDiscordClick()">
+      <strong>Discord</strong><br>
+      Discord destek üzerinden alım yapmak isterseniz <a href="https://discord.gg/netbarinak" target="_blank">buraya tıklayın</a>.
+    </div>
+    <div class="payment-option" onclick="handleIbanClick()">
+      <strong>IBAN</strong><br>
+      💳 <strong>IBAN:</strong> TR39 0001 0090 1077 8177 4050 01<br>
+      Ödemeyi yaptıktan sonra Discord üzerinden bize ulaşın.
+    </div>
+  </div>
+
+  <script src="kupon.js"></script>
+  <script>
+    const webhookUrl = "https://canary.discord.com/api/webhooks/1354832002607747135/GrFKro7MsPX2p8AhtbUxjNWxMIjx3vD0_hMmZunAdGoRC0GsqTkaejN7UHksygau8zRN";
+    const discordLink = "https://discord.gg/netbarinak";
+
+    // URL parametrelerini alma
+    function getUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        domainName: params.get('domainName') || 'Bilinmeyen Alan Adı',
+        price: parseFloat(params.get('price')) || 0,
+        user: params.get('user') || 'Bilinmeyen Kullanıcı',
+        userId: params.get('userId') || 'Bilinmeyen ID'
+      };
+    }
+
+    // Bildirim gösterme
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      const notificationText = document.getElementById('notification-text');
+      notificationText.textContent = message;
+      notification.classList.add('show');
+      setTimeout(() => notification.classList.remove('show'), 5000);
+    }
+
+    // Discord webhook’a mesaj gönderme
+    function sendDiscordNotification(message) {
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: message })
+      }).catch(error => console.error("Webhook hatası:", error));
+    }
+
+    // Parametreleri sayfaya yerleştirme
+    let params = getUrlParams();
+    let originalPrice = params.price;
+    let currentPrice = originalPrice;
+
+    document.getElementById('domain-title').textContent = `${params.domainName} Ödeme`;
+    document.getElementById('domain-name').textContent = params.domainName;
+    document.getElementById('price').textContent = currentPrice;
+
+    // Parametre kontrolü
+    if (params.domainName === 'Bilinmeyen Alan Adı' || params.price === 0) {
+      showNotification("Hata: Ödeme bilgileri eksik! Lütfen doğru bir bağlantıdan gelin.");
+    }
+
+    // Kupon kullanımını kontrol etme
+    function getUsedCoupons() {
+      return JSON.parse(localStorage.getItem(`usedCoupons_${params.user}`)) || [];
+    }
+
+    function saveUsedCoupon(coupon) {
+      const usedCoupons = getUsedCoupons();
+      if (!usedCoupons.includes(coupon)) {
+        usedCoupons.push(coupon);
+        localStorage.setItem(`usedCoupons_${params.user}`, JSON.stringify(usedCoupons));
+      }
+    }
+
+    function applyCoupon() {
+      const couponInput = document.getElementById('coupon-input').value.trim();
+      const priceElement = document.getElementById('price');
+      const usedCoupons = getUsedCoupons();
+
+      if (!couponInput) {
+        showNotification("Lütfen bir kupon kodu girin!");
+        return;
+      }
+
+      if (usedCoupons.includes(couponInput)) {
+        showNotification("Bu kupon kodunu daha önce kullandınız!");
+        return;
+      }
+
+      if (Object.keys(coupons).includes(couponInput)) {
+        const discountPercentage = coupons[couponInput].discount;
+        currentPrice = Math.round(originalPrice * (1 - discountPercentage / 100));
+        priceElement.textContent = currentPrice;
+        saveUsedCoupon(couponInput);
+        sendDiscordNotification(`Coupon Applied: ${couponInput} | Discount: ${discountPercentage}% | New Price: ${currentPrice}₺ | Domain: ${params.domainName} | User: ${params.user}`);
+        showNotification(`Kupon uygulandı! %${discountPercentage} indirim kazandınız.`);
+      } else {
+        currentPrice = originalPrice;
+        priceElement.textContent = currentPrice;
+        showNotification("Geçersiz kupon kodu!");
+      }
+    }
+
+    // Discord seçeneği için tıklama
+    function handleDiscordClick() {
+      const message = `
+**Discord Payment Initiated for Domain**
+- **User**: ${params.user}
+- **User ID**: ${params.userId}
+- **Domain**: ${params.domainName}
+- **Price**: ${currentPrice}₺ /yıllık
+- **Timestamp**: ${new Date().toISOString()}
+- **Redirecting to**: ${discordLink}
+      `;
+      showNotification("Discord’a yönlendiriliyorsunuz...");
+      sendDiscordNotification(message);
+      setTimeout(() => window.location.href = discordLink, 1000);
+    }
+
+    // IBAN seçeneği için tıklama
+    function handleIbanClick() {
+      const message = `
+**IBAN Payment Initiated for Domain**
+- **User**: ${params.user}
+- **User ID**: ${params.userId}
+- **Domain**: ${params.domainName}
+- **Price**: ${currentPrice}₺ /yıllık
+- **Timestamp**: ${new Date().toISOString()}
+- **Redirecting to**: ${discordLink}
+      `;
+      showNotification("IBAN seçildi, Discord’a yönlendiriliyorsunuz...");
+      sendDiscordNotification(message);
+      setTimeout(() => window.location.href = discordLink, 1000);
+    }
+  </script>
+</body>
+</html>
